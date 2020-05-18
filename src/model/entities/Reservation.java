@@ -30,26 +30,31 @@ public class Reservation {
 		return checkIn;
 	}
 
-	private void setCheckIn(Date checkIn) {
-		this.checkIn = checkIn;
-	}
-
 	public Date getCheckOut() {
 		return checkOut;
 	}
 
-	private void setCheckOut(Date checkOut) {
-		this.checkOut = checkOut;
-	}
-
-	public final long duration() {
+	public long duration() {
 		long diff = this.checkOut.getTime() - this.checkIn.getTime();
 		return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 	}
 
-	public final void updateDates(Date checkIn, Date checkOut) {
-		this.setCheckIn(checkIn);
-		this.setCheckOut(checkOut);
+	public String updateDates(Date checkIn, Date checkOut) {
+		
+		Date now = new Date();
+		
+		if(checkIn.before(now) || checkOut.before(now)) {
+			return "Reservation dates for update must be future dates";
+		}
+		
+		if(!checkOut.after(getCheckIn())) {
+			 return "check-out date must be after check-in date";
+		}
+		
+		this.checkIn = checkIn;
+		this.checkOut = checkOut;
+		
+		return null;
 	}
 
 	@Override
